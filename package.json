@@ -19,6 +19,7 @@
     "@types/react": "16.9.2",
     "@types/react-dom": "16.8.5",
     "axios": "^0.19.0",
+    "history": "^4.9.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-redux": "^7.1.1",
@@ -48,5 +49,5 @@
     "@types/react-redux": "^7.1.2",
     "@types/react-router-dom": "^4.3.5"
   },
-  "proxy": "http://localhost:7777"
+  "proxy": "http://blog-platform-api:7777"
 }

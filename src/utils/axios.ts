@@ -1,7 +1,8 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import { history } from './history';
 
 export const axiosInstance = axios.create({
-  baseURL: '/',
+  withCredentials: true,
 });
 
 const requestHandler = (request: AxiosRequestConfig) => {
@@ -10,7 +11,7 @@ const requestHandler = (request: AxiosRequestConfig) => {
   return request;
 };
 
-const requestErrorHandler = (error: Error) => {
+const requestErrorHandler = (error: AxiosError) => {
   // Handle request errors
 
   return Promise.reject({ ...error });
@@ -21,10 +22,10 @@ axiosInstance.interceptors.request.use(
   error => requestErrorHandler(error)
 );
 
-const responseErrorHandler = (error: Error) => {
-  // Handle errors
-
-  // if 401, log the user out
+const responseErrorHandler = (error: AxiosError) => {
+  if (error.response!.status === 401) {
+    history.push('/login');
+  }
 
   return Promise.reject({ ...error });
 };

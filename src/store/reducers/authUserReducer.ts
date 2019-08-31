@@ -1,34 +1,30 @@
-import { Reducer } from 'redux';
-import { IPermissions } from '../../types';
+import { IUser } from '../../types';
+import { IAuthUserAction, IAuthUserTypes } from '../actions/authUser';
+
+export interface IAuthUserState extends Omit<IUser, 'sessionId'> {
+  isLoggedIn: boolean;
+}
 
 const defaultState = {
   id: '',
   name: '',
   username: '',
   email: '',
-  permissions: [],
   bio: '',
   gravatar: '',
-  loggedIn: false,
+  isLoggedIn: false,
 };
 
-export const authUserReducer: Reducer<IAuthUserState> = (
+export const authUserReducer = (
   state = defaultState,
-  { type, payload }
-) => {
+  { type, payload }: IAuthUserAction
+): IAuthUserState => {
   switch (type) {
+    case IAuthUserTypes.SET_USER:
+      return payload;
+    case IAuthUserTypes.CLEAR_USER:
+      return defaultState;
     default:
       return state;
   }
 };
-
-export interface IAuthUserState {
-  readonly id: string;
-  readonly name: string;
-  readonly username: string;
-  readonly email: string;
-  readonly permissions: IPermissions[];
-  readonly bio: string;
-  readonly gravatar: string;
-  readonly loggedIn: boolean;
-}

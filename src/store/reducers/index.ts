@@ -1,10 +1,10 @@
 import { authUserReducer, IAuthUserState } from './authUserReducer';
 import { combineReducers } from 'redux';
 
-export const rootReducer = combineReducers<IAppState>({
+export const rootReducer = combineReducers({
   authUser: authUserReducer,
 });
 
 export interface IAppState {
-  readonly authUser: IAuthUserState;
+  authUser: IAuthUserState;
 }

@@ -3,7 +3,7 @@ export interface IUser {
   name: string;
   username: string;
   email: string;
-  permissions: IPermissions[];
+  permissions?: IPermissions[];
   sessionId: string;
   bio: string;
   gravatar: string;

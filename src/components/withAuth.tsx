@@ -1,16 +1,18 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { IAppState } from '../store/reducers';
+import { Redirect } from 'react-router';
+import { IAuthState, useAuth } from '../hooks/useAuth';
 
 export function withAuth<T>(Component: React.FC<T>) {
   return function(props: T) {
-    const isLoggedIn = useSelector<IAppState, boolean>(
-      state => state.authUser.loggedIn
-    );
+    const isAuth = useAuth();
 
-    return (
-      <>{isLoggedIn ? <Component {...props} /> : <Redirect to="/login" />}</>
-    );
+    switch (isAuth) {
+      case IAuthState.IS_LOADING:
+        return <div>Loading...</div>;
+      case IAuthState.IS_UNAUTHORIZED:
+        return <Redirect to="/login" />;
+      default:
+        return <Component {...props} />;
+    }
   };
 }
