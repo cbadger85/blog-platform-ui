@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router';
-import { IAuthState, useAuth } from '../hooks/useAuth';
+import { IAuthState, useAuth } from '../hooks';
 
 export function withAuth<T>(Component: React.FC<T>) {
   return function(props: T) {

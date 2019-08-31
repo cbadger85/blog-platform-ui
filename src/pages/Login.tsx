@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router';
-import { useAuth, IAuthState } from '../hooks/useAuth';
+import { useAuth, IAuthState } from '../hooks';
 import { setUser } from '../store/actions/authUser';
 import { IUser } from '../types';
-import { axiosInstance } from '../utils/axios';
-import { history } from '../utils/history';
+import { axiosInstance, history } from '../utils';
 
 export const Login: React.FC = () => {
   const dispatch = useDispatch();
