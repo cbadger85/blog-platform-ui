@@ -1,7 +1,7 @@
-import { IUser } from '../../types';
-import { IAuthUserAction, IAuthUserTypes } from '../actions/authUser';
+import { User } from '../../types';
+import { AuthUserAction, AuthUserTypes } from '../actions/authUser';
 
-export interface IAuthUserState extends Omit<IUser, 'sessionId'> {
+export interface AuthUserState extends Omit<User, 'sessionId'> {
   isLoggedIn: boolean;
 }
 
@@ -17,12 +17,12 @@ const defaultState = {
 
 export const authUserReducer = (
   state = defaultState,
-  { type, payload }: IAuthUserAction
-): IAuthUserState => {
+  { type, payload }: AuthUserAction
+): AuthUserState => {
   switch (type) {
-    case IAuthUserTypes.SET_USER:
+    case AuthUserTypes.SET_USER:
       return payload;
-    case IAuthUserTypes.CLEAR_USER:
+    case AuthUserTypes.CLEAR_USER:
       return defaultState;
     default:
       return state;

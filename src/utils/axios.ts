@@ -23,7 +23,7 @@ axiosInstance.interceptors.request.use(
 );
 
 const responseErrorHandler = (error: AxiosError) => {
-  if (error.response!.status === 401) {
+  if (error.response && error.response.status === 401) {
     history.push('/login');
   }
 

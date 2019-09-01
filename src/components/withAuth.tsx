@@ -1,15 +1,17 @@
 import React from 'react';
 import { Redirect } from 'react-router';
-import { IAuthState, useAuth } from '../hooks';
+import { AuthState, useAuth } from '../hooks';
 
-export function withAuth<T>(Component: React.FC<T>) {
-  return function(props: T) {
+export function withAuth<T>(
+  Component: React.FC<T>
+): React.FunctionComponent<T> {
+  return function WithAuth(props: T) {
     const isAuth = useAuth();
 
     switch (isAuth) {
-      case IAuthState.IS_LOADING:
+      case AuthState.IS_LOADING:
         return <div>Loading...</div>;
-      case IAuthState.IS_UNAUTHORIZED:
+      case AuthState.IS_UNAUTHORIZED:
         return <Redirect to="/login" />;
       default:
         return <Component {...props} />;

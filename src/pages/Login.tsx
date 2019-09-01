@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router';
-import { useAuth, IAuthState } from '../hooks';
+import { useAuth, AuthState } from '../hooks';
 import { setUser } from '../store/actions/authUser';
-import { IUser } from '../types';
+import { User } from '../types';
 import { axiosInstance, history } from '../utils';
 
 export const Login: React.FC = () => {
@@ -18,7 +18,7 @@ export const Login: React.FC = () => {
 
   const handleLogin = () => {
     axiosInstance
-      .post<IUser>('/auth/login', { username, password })
+      .post<User>('/auth/login', { username, password })
       .then(res => {
         dispatch(setUser(res.data));
         history.push('/');
@@ -27,9 +27,9 @@ export const Login: React.FC = () => {
   };
 
   switch (isAuth) {
-    case IAuthState.IS_LOADING:
+    case AuthState.IS_LOADING:
       return <div>Loading...</div>;
-    case IAuthState.IS_AUTHORIZED:
+    case AuthState.IS_AUTHORIZED:
       return <Redirect to="/" />;
     default:
       return (
