@@ -20,7 +20,6 @@ export const useAuth = (): AuthState => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      setIsAuth(isAuth);
       setIsAuth(AuthState.IS_AUTHORIZED);
     } else {
       axiosInstance
@@ -31,7 +30,7 @@ export const useAuth = (): AuthState => {
         })
         .catch(_e => setIsAuth(AuthState.IS_UNAUTHORIZED));
     }
-  }, [isAuth, isLoggedIn, dispatch]);
+  }, [isLoggedIn, dispatch]);
 
   return isAuth;
 };

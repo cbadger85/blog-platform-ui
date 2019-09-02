@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Redirect } from 'react-router';
-import { useAuth, AuthState } from '../hooks';
+import { Redirect, RouteComponentProps } from 'react-router';
+import { AuthState, useAuth } from '../hooks';
 import { setUser } from '../store/actions/authUser';
 import { User } from '../types';
-import { axiosInstance, history } from '../utils';
+import { axiosInstance } from '../utils';
 
-export const Login: React.FC = () => {
+export const Login: React.FC<RouteComponentProps> = props => {
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const isAuth = useAuth();
 
-  console.log(isAuth);
+  const { from } = props.location.state || { from: { pathname: '/' } };
 
   const handleLogin = () => {
     axiosInstance
       .post<User>('/auth/login', { username, password })
       .then(res => {
         dispatch(setUser(res.data));
-        history.push('/');
+        setIsLoggedIn(true);
       })
       .catch(e => console.error(e));
   };
@@ -30,14 +31,26 @@ export const Login: React.FC = () => {
     case AuthState.IS_LOADING:
       return <div>Loading...</div>;
     case AuthState.IS_AUTHORIZED:
-      return <Redirect to="/" />;
+      return <Redirect to={from} />;
     default:
       return (
-        <div>
-          <input onChange={e => setUsername(e.target.value)} value={username} />
-          <input onChange={e => setPassword(e.target.value)} value={password} />
-          <button onClick={handleLogin}>Login</button>
-        </div>
+        <>
+          {isLoggedIn ? (
+            <Redirect to={from} />
+          ) : (
+            <div>
+              <input
+                onChange={e => setUsername(e.target.value)}
+                value={username}
+              />
+              <input
+                onChange={e => setPassword(e.target.value)}
+                value={password}
+              />
+              <button onClick={handleLogin}>Login</button>
+            </div>
+          )}
+        </>
       );
   }
 };

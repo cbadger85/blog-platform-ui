@@ -1,15 +1,19 @@
 import React from 'react';
-import { Router, Route } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 import { Homepage, Login } from '../pages';
-import { withAuth } from './withAuth';
 import { history } from '../utils/history';
+import { PrivateRoute } from './PrivateRoute';
+import { Test } from './Test';
 
 export const App: React.FC = () => {
   return (
     <div>
       <Router history={history}>
-        <Route path="/" exact component={withAuth(Homepage)} />
-        <Route path="/Login" exact component={Login} />
+        <Switch>
+          <Route path="/Login" exact component={Login} />
+          <PrivateRoute path="/" exact component={Homepage} />
+          <PrivateRoute path="/test" exact component={Test} />
+        </Switch>
       </Router>
     </div>
   );

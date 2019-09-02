@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { history } from './history';
+// import { history } from './history';
+import { store } from '../store';
+import { ClearUser } from '../store/actions/authUser';
 
 export const axiosInstance = axios.create({
   withCredentials: true,
@@ -24,7 +26,8 @@ axiosInstance.interceptors.request.use(
 
 const responseErrorHandler = (error: AxiosError) => {
   if (error.response && error.response.status === 401) {
-    history.push('/login');
+    store.dispatch(ClearUser());
+    // history.push('/login');
   }
 
   return Promise.reject({ ...error });
