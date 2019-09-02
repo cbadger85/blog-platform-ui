@@ -38,6 +38,7 @@ export const Login: React.FC<RouteComponentProps> = props => {
           {isLoggedIn ? (
             <Redirect to={from} />
           ) : (
+            //TODO refactor to separate login form component
             <div>
               <input
                 onChange={e => setUsername(e.target.value)}
