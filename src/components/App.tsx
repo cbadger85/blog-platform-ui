@@ -12,7 +12,7 @@ export const App: React.FC = () => {
         <Switch>
           <Route path="/Login" exact component={Login} />
           <PrivateRoute path="/" exact component={Homepage} />
-          <PrivateRoute path="/test" exact component={Test} />
+          <Route path="/test" exact component={Test} />
         </Switch>
       </Router>
     </div>

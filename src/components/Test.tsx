@@ -1,10 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Form } from '../utils/FormUp/Form';
+import { Input } from '../utils/FormUp/Input';
 
 export const Test: React.FC = () => {
   return (
     <div>
-      <Link to="/login">Test Private Route</Link>
+      <Form submit={value => console.log(value)}>
+        <Input id="name" placeholder="name" label="name" />
+        <Input id="name2" placeholder="name2" label="name2" />
+      </Form>
     </div>
   );
 };
