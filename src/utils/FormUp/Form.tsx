@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import mapValues from 'lodash/mapValues';
 import React, { FormEvent, useCallback, useReducer } from 'react';
 import {
   FormActionType,
@@ -35,17 +36,17 @@ export const Form: React.FC<FormProps> = ({ children, submit }) => {
 
     console.log(formState);
 
-    if (!formState || _.isEmpty(formState)) {
+    if (!formState || isEmpty(formState)) {
       return;
     }
 
-    const data = _.mapValues(formState as FormState, field => field.value);
+    const data = mapValues(formState as FormState, field => field.value);
 
     submit(data);
   };
 
   const formIsInvalid = (): boolean => {
-    if (!formState || _.isEmpty(formState)) {
+    if (!formState || isEmpty(formState)) {
       return false;
     }
 

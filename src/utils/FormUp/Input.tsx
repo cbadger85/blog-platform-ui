@@ -1,6 +1,12 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
+import debounce from 'lodash/debounce';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { FormContext } from './state';
-import _ from 'lodash';
 
 export const Input: React.FC<InputProps> = ({
   id,
@@ -10,30 +16,34 @@ export const Input: React.FC<InputProps> = ({
   required,
   validate,
   validationMessage,
+  ...inputProps
 }) => {
   const { formState, updateField, registerField } = useContext(
     FormContext
   ) as FormContext;
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
-  const validator = (input: string): boolean => {
-    const hasPassedValidation = validate && validate(input);
-    const isEmpty = !input.trim();
+  const validator = useCallback(
+    (input: string): boolean => {
+      const hasPassedValidation = validate && validate(input);
+      const isEmpty = !input.trim();
 
-    if (required && validate && !hasPassedValidation) {
-      return false;
-    }
+      if (required && validate && !hasPassedValidation) {
+        return false;
+      }
 
-    if (required && isEmpty) {
-      return false;
-    }
+      if (required && isEmpty) {
+        return false;
+      }
 
-    if (validate && !hasPassedValidation) {
-      return false;
-    }
+      if (validate && !hasPassedValidation) {
+        return false;
+      }
 
-    return true;
-  };
+      return true;
+    },
+    [required, validate]
+  );
 
   useEffect(() => {
     registerField({
@@ -41,17 +51,20 @@ export const Input: React.FC<InputProps> = ({
       value: defaultValue,
       isValid: validator(defaultValue),
     });
-  }, [id, defaultValue, registerField]);
+  }, [id, defaultValue, registerField, validator]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const isInputValid = validator(e.target.value);
 
     e.persist();
-    const handleShowErrors = _.debounce(() => {
+    const handleShowErrors = debounce(() => {
       setShowErrorMessage(!validator(e.target.value));
     }, 800);
 
     handleShowErrors();
+    if (isInputValid) {
+      handleShowErrors.cancel();
+    }
 
     updateField({ id, value: e.target.value, isValid: isInputValid });
   };
@@ -71,6 +84,7 @@ export const Input: React.FC<InputProps> = ({
               id={id}
               placeholder={placeholder}
               autoComplete="off"
+              {...inputProps}
             />
           </label>
           <div style={{ height: '1rem' }}>
@@ -84,7 +98,8 @@ export const Input: React.FC<InputProps> = ({
 
 type InputProps = InputPropsWithValidation | InputPropsWithoutValidation;
 
-interface InputPropsWithoutValidation {
+interface InputPropsWithoutValidation
+  extends React.HTMLProps<HTMLInputElement> {
   id: string;
   label?: string;
   placeholder?: string;
@@ -94,7 +109,7 @@ interface InputPropsWithoutValidation {
   validationMessage?: never;
 }
 
-interface InputPropsWithValidation {
+interface InputPropsWithValidation extends React.HTMLProps<HTMLInputElement> {
   id: string;
   label?: string;
   placeholder?: string;
