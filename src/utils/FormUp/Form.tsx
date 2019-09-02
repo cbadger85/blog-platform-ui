@@ -8,7 +8,7 @@ import {
   RegisterActionPayload,
   UpdateActionPayload,
   updateFieldAction,
-} from '../state';
+} from './state';
 
 export const Form: React.FC<FormProps> = ({ children, submit }) => {
   const [formState, formDispatch] = useReducer(formReducer, undefined as never);
@@ -33,7 +33,9 @@ export const Form: React.FC<FormProps> = ({ children, submit }) => {
   const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    if (!formState) {
+    console.log(formState);
+
+    if (!formState || _.isEmpty(formState)) {
       return;
     }
 
@@ -42,11 +44,25 @@ export const Form: React.FC<FormProps> = ({ children, submit }) => {
     submit(data);
   };
 
+  const formIsInvalid = (): boolean => {
+    if (!formState || _.isEmpty(formState)) {
+      return false;
+    }
+
+    console.log(formState);
+
+    return Object.values(formState as FormState)
+      .map(data => data.isValid)
+      .some(data => data === false);
+  };
+
   return (
     <FormContext.Provider value={context}>
       <form onSubmit={handleOnSubmit}>
         {children}
-        <button type="submit">click here</button>
+        <button type="submit" disabled={formIsInvalid()}>
+          click here
+        </button>
       </form>
     </FormContext.Provider>
   );
@@ -56,6 +72,6 @@ interface FormProps {
   submit: (values: FormData) => void;
 }
 
-interface FormData {
+export interface FormData {
   [id: string]: string;
 }

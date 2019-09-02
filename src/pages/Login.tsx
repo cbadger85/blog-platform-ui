@@ -5,19 +5,18 @@ import { AuthState, useAuth } from '../hooks';
 import { setUser } from '../store/actions/authUser';
 import { User } from '../types';
 import { axiosInstance } from '../utils';
+import { Form, Input, FormData } from '../utils/FormUp';
 
 export const Login: React.FC<RouteComponentProps> = props => {
   const dispatch = useDispatch();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const isAuth = useAuth();
 
   const { from } = props.location.state || { from: { pathname: '/' } };
 
-  const handleLogin = () => {
+  const handleLogin = ({ username, password }: FormData) => {
     axiosInstance
       .post<User>('/auth/login', { username, password })
       .then(res => {
@@ -38,17 +37,15 @@ export const Login: React.FC<RouteComponentProps> = props => {
           {isLoggedIn ? (
             <Redirect to={from} />
           ) : (
-            //TODO refactor to separate login form component
             <div>
-              <input
-                onChange={e => setUsername(e.target.value)}
-                value={username}
-              />
-              <input
-                onChange={e => setPassword(e.target.value)}
-                value={password}
-              />
-              <button onClick={handleLogin}>Login</button>
+              <Form submit={handleLogin}>
+                <Input
+                  id="username"
+                  placeholder="username"
+                  validate={input => input.length < 3}
+                />
+                <Input id="password" placeholder="password" />
+              </Form>
             </div>
           )}
         </>
