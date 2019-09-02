@@ -42,9 +42,11 @@ export const Login: React.FC<RouteComponentProps> = props => {
                 <Input
                   id="username"
                   placeholder="username"
-                  validate={input => input.length < 3}
+                  required
+                  validate={input => input.length > 2}
+                  validationMessage="Input must be greater than 2 characters"
                 />
-                <Input id="password" placeholder="password" />
+                <Input id="password" placeholder="password" required />
               </Form>
             </div>
           )}

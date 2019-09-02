@@ -49,8 +49,6 @@ export const Form: React.FC<FormProps> = ({ children, submit }) => {
       return false;
     }
 
-    console.log(formState);
-
     return Object.values(formState as FormState)
       .map(data => data.isValid)
       .some(data => data === false);
