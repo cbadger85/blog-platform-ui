@@ -97,14 +97,3 @@ interface InputPropsWithValidation extends React.HTMLProps<HTMLInputElement> {
   validate: (input: string, formState: FormState) => boolean;
   validationMessage: string;
 }
-
-// interface InputPropsWithValidationAndFormState
-//   extends React.HTMLProps<HTMLInputElement> {
-//   id: string;
-//   label?: string;
-//   placeholder?: string;
-//   defaultValue?: string;
-//   required?: boolean;
-//   validate: (input: string, formState: FormState) => boolean;
-//   validationMessage: string;
-// }
