@@ -1,12 +1,7 @@
 import debounce from 'lodash/debounce';
-import React, {
-  ChangeEvent,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import { FormContext } from './state';
+import React, { ChangeEvent, useState } from 'react';
+import { validateInput } from './utils';
+import { useRegisterField } from './utils/useRegisterField';
 
 export const Input: React.FC<InputProps> = ({
   id,
@@ -18,47 +13,21 @@ export const Input: React.FC<InputProps> = ({
   validationMessage,
   ...inputProps
 }) => {
-  const { formState, updateField, registerField } = useContext(
-    FormContext
-  ) as FormContext;
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
-
-  const validator = useCallback(
-    (input: string): boolean => {
-      const hasPassedValidation = validate && validate(input);
-      const isEmpty = !input.trim();
-
-      if (required && validate && !hasPassedValidation) {
-        return false;
-      }
-
-      if (required && isEmpty) {
-        return false;
-      }
-
-      if (validate && !hasPassedValidation) {
-        return false;
-      }
-
-      return true;
-    },
-    [required, validate]
+  const { formState, updateField } = useRegisterField(
+    id,
+    defaultValue,
+    required,
+    validate
   );
 
-  useEffect(() => {
-    registerField({
-      id,
-      value: defaultValue,
-      isValid: validator(defaultValue),
-    });
-  }, [id, defaultValue, registerField, validator]);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const isInputValid = validator(e.target.value);
+    const isInputValid = validateInput(e.target.value, required, validate);
 
     e.persist();
     const handleShowErrors = debounce(() => {
-      setShowErrorMessage(!validator(e.target.value));
+      setShowErrorMessage(!validateInput(e.target.value, required, validate));
     }, 800);
 
     handleShowErrors();

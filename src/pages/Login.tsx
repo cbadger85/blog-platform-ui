@@ -39,7 +39,13 @@ export const Login: React.FC<RouteComponentProps> = props => {
           ) : (
             <div>
               <Form submit={handleLogin}>
-                <Input id="username" placeholder="username" required />
+                <Input
+                  id="username"
+                  placeholder="username"
+                  required
+                  validate={input => input.length > 2}
+                  validationMessage="I'm invalid"
+                />
                 <Input
                   id="password"
                   placeholder="password"
