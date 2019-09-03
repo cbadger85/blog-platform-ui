@@ -1,6 +1,7 @@
 import debounce from 'lodash/debounce';
-import React, { ChangeEvent, useState } from 'react';
-import { validateInput, useRegisterField } from './utils';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useRegisterField, validateInput } from './utils';
+import { FormState } from './state';
 
 export const Input: React.FC<InputProps> = ({
   id,
@@ -20,19 +21,29 @@ export const Input: React.FC<InputProps> = ({
   );
 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [hasRecievedFocus, setHasRecievedFocus] = useState(false);
+
+  useEffect(() => {
+    const handleShowErrors = debounce(() => {
+      validate &&
+        setShowErrorMessage(
+          !validateInput(formState[id].value, formState, required, validate)
+        );
+    }, 500);
+
+    hasRecievedFocus && handleShowErrors();
+    return () => {
+      handleShowErrors.cancel();
+    };
+  }, [formState, id, required, validate, hasRecievedFocus]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const isInputValid = validateInput(e.target.value, required, validate);
-
-    e.persist();
-    const handleShowErrors = debounce(() => {
-      setShowErrorMessage(!validateInput(e.target.value, required, validate));
-    }, 800);
-
-    handleShowErrors();
-    if (isInputValid) {
-      handleShowErrors.cancel();
-    }
+    const isInputValid = validateInput(
+      e.target.value,
+      formState,
+      required,
+      validate
+    );
 
     updateField({ id, value: e.target.value, isValid: isInputValid });
   };
@@ -52,6 +63,7 @@ export const Input: React.FC<InputProps> = ({
               id={id}
               placeholder={placeholder}
               {...inputProps}
+              onFocus={() => setHasRecievedFocus(true)}
             />
           </label>
           <div style={{ height: '1rem' }}>
@@ -63,7 +75,7 @@ export const Input: React.FC<InputProps> = ({
   );
 };
 
-type InputProps = InputPropsWithValidation | InputPropsWithoutValidation;
+type InputProps = InputPropsWithoutValidation | InputPropsWithValidation;
 
 interface InputPropsWithoutValidation
   extends React.HTMLProps<HTMLInputElement> {
@@ -82,6 +94,17 @@ interface InputPropsWithValidation extends React.HTMLProps<HTMLInputElement> {
   placeholder?: string;
   defaultValue?: string;
   required?: boolean;
-  validate: (input: string) => boolean;
+  validate: (input: string, formState: FormState) => boolean;
   validationMessage: string;
 }
+
+// interface InputPropsWithValidationAndFormState
+//   extends React.HTMLProps<HTMLInputElement> {
+//   id: string;
+//   label?: string;
+//   placeholder?: string;
+//   defaultValue?: string;
+//   required?: boolean;
+//   validate: (input: string, formState: FormState) => boolean;
+//   validationMessage: string;
+// }

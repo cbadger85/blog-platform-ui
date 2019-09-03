@@ -1,9 +1,13 @@
+import { FormState } from '../state';
+
 export const validateInput = (
   input: string,
+  formState: FormState,
   required: boolean | undefined,
-  validate: ((input: string) => boolean) | undefined
+  validate?: (input: string, formState: FormState) => boolean
 ): boolean => {
-  const hasPassedValidation = validate && validate(input);
+  const hasPassedValidation =
+    validate && formState && validate(input, formState);
   const isEmpty = !input.trim();
 
   if (required && validate && !hasPassedValidation) {

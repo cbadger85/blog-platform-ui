@@ -39,7 +39,14 @@ export const Login: React.FC<RouteComponentProps> = props => {
           ) : (
             <div>
               <Form submit={handleLogin}>
-                <Input id="username" placeholder="username" required />
+                <Input
+                  id="username"
+                  placeholder="username"
+                  required
+                  validate={(input, _formState) => input.length === 4}
+                  validationMessage="yes"
+                  autoComplete="off"
+                />
                 <Input
                   id="password"
                   placeholder="password"
