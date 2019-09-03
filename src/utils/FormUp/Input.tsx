@@ -1,7 +1,6 @@
 import debounce from 'lodash/debounce';
 import React, { ChangeEvent, useState } from 'react';
-import { validateInput } from './utils';
-import { useRegisterField } from './utils/useRegisterField';
+import { validateInput, useRegisterField } from './utils';
 
 export const Input: React.FC<InputProps> = ({
   id,

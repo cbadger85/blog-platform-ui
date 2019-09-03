@@ -34,8 +34,6 @@ export const Form: React.FC<FormProps> = ({ children, submit }) => {
   const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    console.log(formState);
-
     if (!formState || isEmpty(formState)) {
       return;
     }
