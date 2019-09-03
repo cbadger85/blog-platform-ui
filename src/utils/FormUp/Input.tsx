@@ -52,7 +52,6 @@ export const Input: React.FC<InputProps> = ({
               onChange={handleOnChange}
               id={id}
               placeholder={placeholder}
-              autoComplete="off"
               {...inputProps}
             />
           </label>
