@@ -43,7 +43,7 @@ export const Login: React.FC<RouteComponentProps> = props => {
                   id="username"
                   placeholder="username"
                   required
-                  validate={(input, _formState) => input.length === 4}
+                  validate={(input, _formState) => input.length < 4}
                   validationMessage="yes"
                   autoComplete="off"
                 />

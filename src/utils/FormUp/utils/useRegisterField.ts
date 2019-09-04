@@ -1,6 +1,5 @@
 import { useContext, useEffect, useMemo } from 'react';
 import { FormContext, FormState } from '../state';
-import { validateInput } from './validateInput';
 
 export const useRegisterField = (
   id: string,
@@ -12,10 +11,20 @@ export const useRegisterField = (
     FormContext
   ) as FormContext;
 
-  const isValid = useMemo(
-    () => validateInput(defaultValue, formState, required, validate),
-    [defaultValue, formState, required, validate]
-  );
+  const isValid = useMemo(() => {
+    const isEmpty = required && !defaultValue.trim();
+    const inputIsValid =
+      formState && validate && validate(defaultValue, formState);
+    if (required && isEmpty) {
+      return false;
+    }
+
+    if (validate && !inputIsValid) {
+      return false;
+    }
+
+    return true;
+  }, [defaultValue, formState, required, validate]);
 
   useEffect(() => {
     registerField({
