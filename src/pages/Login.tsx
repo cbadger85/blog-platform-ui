@@ -38,7 +38,7 @@ export const Login: React.FC<RouteComponentProps> = props => {
             <Redirect to={from} />
           ) : (
             <div>
-              <Form submit={handleLogin}>
+              <Form onSubmit={handleLogin} submitText="Login">
                 <Input
                   id="username"
                   placeholder="username"

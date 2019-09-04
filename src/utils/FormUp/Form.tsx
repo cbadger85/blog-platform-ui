@@ -11,7 +11,13 @@ import {
   updateFieldAction,
 } from './state';
 
-export const Form: React.FC<FormProps> = ({ children, submit }) => {
+export const Form: React.FC<FormProps> = ({
+  children,
+  onSubmit,
+  submitText,
+  onCancel,
+  cancelText,
+}) => {
   const [formState, formDispatch] = useReducer(formReducer, undefined as never);
 
   const updateField = useCallback(
@@ -40,7 +46,11 @@ export const Form: React.FC<FormProps> = ({ children, submit }) => {
 
     const data = mapValues(formState as FormState, field => field.value);
 
-    submit(data);
+    onSubmit(data);
+  };
+
+  const handleOnCancel = () => {
+    onCancel && onCancel();
   };
 
   const formIsInvalid = (): boolean => {
@@ -58,15 +68,23 @@ export const Form: React.FC<FormProps> = ({ children, submit }) => {
       <form onSubmit={handleOnSubmit}>
         {children}
         <button type="submit" disabled={formIsInvalid()}>
-          click here
+          {submitText ? submitText : 'Submit'}
         </button>
+        {onCancel && (
+          <button type="button" onClick={handleOnCancel}>
+            {cancelText ? cancelText : 'cancel'}
+          </button>
+        )}
       </form>
     </FormContext.Provider>
   );
 };
 
 interface FormProps {
-  submit: (values: FormData) => void;
+  onSubmit: (values: FormData) => void;
+  submitText?: string;
+  onCancel?: () => void;
+  cancelText?: string;
 }
 
 export interface FormData {
