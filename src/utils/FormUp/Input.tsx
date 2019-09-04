@@ -1,7 +1,18 @@
-import debounce from 'lodash/debounce';
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from 'react';
 import { FormState } from './state';
 import { useRegisterField } from './utils';
+
+enum ErrorMessageType {
+  REQUIRED = 'REQUIRED',
+  VALIDATION = 'VALIDATION',
+  NONE = 'NONE',
+}
 
 export const Input: React.FC<InputProps> = ({
   id,
@@ -20,11 +31,10 @@ export const Input: React.FC<InputProps> = ({
     validate
   );
 
-  const [showInputIsInvalidMessage, setShowInputIsInvalidMessage] = useState(
-    false
-  );
-  const [showIsRequiredMessage, setShowIsRequiredMessage] = useState(false);
   const [hasBlurred, setHasBlurred] = useState(false);
+  const [errorMessageType, setErrorMessageType] = useState(
+    ErrorMessageType.NONE
+  );
 
   const isValid = useMemo(
     () => validate && formState && validate(formState[id].value, formState),
@@ -36,18 +46,27 @@ export const Input: React.FC<InputProps> = ({
     [formState, id, required]
   );
 
+  const handleErrorMessageType = useCallback(() => {
+    if (!hasBlurred) {
+      return;
+    }
+
+    if (isEmpty) {
+      setErrorMessageType(ErrorMessageType.REQUIRED);
+      return;
+    }
+
+    if (!isValid) {
+      setErrorMessageType(ErrorMessageType.VALIDATION);
+      return;
+    }
+
+    setErrorMessageType(ErrorMessageType.NONE);
+  }, [hasBlurred, isEmpty, isValid]);
+
   useEffect(() => {
-    const handleShowErrors = debounce(() => {
-      setShowInputIsInvalidMessage(!isValid);
-      setShowIsRequiredMessage(isEmpty && hasBlurred);
-    }, 500);
-
-    handleShowErrors();
-
-    return () => {
-      handleShowErrors.cancel();
-    };
-  }, [setShowInputIsInvalidMessage, isValid, isEmpty, hasBlurred]);
+    handleErrorMessageType();
+  }, [handleErrorMessageType]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fieldValues = { id, value: e.target.value };
@@ -67,25 +86,13 @@ export const Input: React.FC<InputProps> = ({
     updateField({ ...fieldValues, isValid: true });
   };
 
-  const handleOnBlur = () => {
-    if (isEmpty && required) {
-      setShowIsRequiredMessage(true);
-    }
-
-    if (!isValid && validate) {
-      setShowInputIsInvalidMessage(true);
-    }
-
-    setHasBlurred(true);
-  };
-
   const handleShowError = (): string => {
-    if (showIsRequiredMessage) {
+    if (errorMessageType === ErrorMessageType.REQUIRED) {
       return 'Required';
     }
 
-    if (showInputIsInvalidMessage && validationMessage) {
-      return validationMessage;
+    if (errorMessageType === ErrorMessageType.VALIDATION) {
+      return validationMessage || '';
     }
 
     return '';
@@ -102,7 +109,7 @@ export const Input: React.FC<InputProps> = ({
             </span>
             <input
               onChange={handleOnChange}
-              onBlur={handleOnBlur}
+              onBlur={() => setHasBlurred(true)}
               value={formState[id].value}
               id={id}
               placeholder={placeholder}
