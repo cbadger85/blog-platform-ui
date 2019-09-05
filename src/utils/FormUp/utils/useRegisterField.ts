@@ -14,7 +14,7 @@ export const useRegisterField = (
   const isValid = useMemo(() => {
     const isEmpty = required && !defaultValue.trim();
     const inputIsValid =
-      formState && validate && validate(defaultValue, formState);
+      (formState && validate && validate(defaultValue, formState)) || !required;
     if (required && isEmpty) {
       return false;
     }

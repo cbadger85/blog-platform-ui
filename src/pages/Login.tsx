@@ -42,13 +42,12 @@ export const Login: React.FC<RouteComponentProps> = props => {
                 <Input
                   id="username"
                   placeholder="username"
-                  required
                   autoComplete="off"
                 />
                 <Input
                   id="password"
                   placeholder="password"
-                  required
+                  // required
                   type="password"
                 />
               </Form>

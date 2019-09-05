@@ -37,7 +37,9 @@ export const Input: React.FC<InputProps> = ({
   );
 
   const isValid = useMemo(
-    () => validate && formState && validate(formState[id].value, formState),
+    () =>
+      (validate && formState && validate(formState[id].value, formState)) ||
+      (formState && formState[id].value.length === 0),
     [formState, id, validate]
   );
 
@@ -71,7 +73,9 @@ export const Input: React.FC<InputProps> = ({
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fieldValues = { id, value: e.target.value };
     const inputIsEmpty = !e.target.value.trim();
-    const inputIsValid = validate && validate(e.target.value, formState);
+    const inputIsValid =
+      (validate && validate(e.target.value, formState)) ||
+      e.target.value.length === 0;
 
     if (required && inputIsEmpty) {
       updateField({ ...fieldValues, isValid: false });
