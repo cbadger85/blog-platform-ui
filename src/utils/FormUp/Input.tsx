@@ -21,7 +21,8 @@ export const Input: React.FC<InputProps> = ({
   defaultValue = '',
   required,
   validate,
-  validationMessage,
+  validationMessage = 'Failed validation',
+  requiredMessage = 'Required',
   ...inputProps
 }) => {
   const { formState, updateField } = useRegisterField(
@@ -92,7 +93,7 @@ export const Input: React.FC<InputProps> = ({
 
   const handleShowError = (): string => {
     if (errorMessageType === ErrorMessageType.REQUIRED) {
-      return 'Required';
+      return requiredMessage;
     }
 
     if (errorMessageType === ErrorMessageType.VALIDATION) {
@@ -128,25 +129,43 @@ export const Input: React.FC<InputProps> = ({
   );
 };
 
-type InputProps = InputPropsWithoutValidation | InputPropsWithValidation;
+type InputProps =
+  | InputPropsWithoutValidationAndRequired
+  | InputPropsWithValidation
+  | InputPropsWithRequired
+  | InputPropsWithValidationAndRequired;
 
-interface InputPropsWithoutValidation
-  extends React.HTMLProps<HTMLInputElement> {
+interface CommonInputProps extends React.HTMLProps<HTMLInputElement> {
   id: string;
   label?: string;
   placeholder?: string;
   defaultValue?: string;
-  required?: boolean;
+}
+
+interface InputPropsWithoutValidationAndRequired extends CommonInputProps {
+  required?: never;
+  requiredMessage?: never;
   validate?: never;
   validationMessage?: never;
 }
 
-interface InputPropsWithValidation extends React.HTMLProps<HTMLInputElement> {
-  id: string;
-  label?: string;
-  placeholder?: string;
-  defaultValue?: string;
+interface InputPropsWithValidation extends CommonInputProps {
   required?: boolean;
+  requiredMessage?: string;
   validate: (input: string, formState: FormState) => boolean;
-  validationMessage: string;
+  validationMessage?: string;
+}
+
+interface InputPropsWithRequired extends CommonInputProps {
+  required: boolean;
+  requiredMessage?: string;
+  validate?: never;
+  validationMessage?: never;
+}
+
+interface InputPropsWithValidationAndRequired extends CommonInputProps {
+  required: boolean;
+  requiredMessage?: string;
+  validate: (input: string, formState: FormState) => boolean;
+  validationMessage?: never;
 }
