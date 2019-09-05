@@ -113,6 +113,7 @@ export const Input: React.FC<InputProps> = ({
               value={formState[id].value}
               id={id}
               placeholder={placeholder}
+              required={required}
               {...inputProps}
             />
           </label>
