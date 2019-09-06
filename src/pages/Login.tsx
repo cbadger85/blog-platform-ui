@@ -44,11 +44,7 @@ export const Login: React.FC<RouteComponentProps> = props => {
                   name="password"
                   placeholder="password"
                   required
-                  validate={(input, formState) =>
-                    input === formState.username.value
-                  }
-                  validationMessage="invalid"
-                  // type="password"
+                  type="password"
                 />
               </Form>
             </div>

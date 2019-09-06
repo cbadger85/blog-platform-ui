@@ -100,6 +100,7 @@ export const Input: React.FC<InputProps> = ({
               </span>
             </span>
             <input
+              name={name}
               onChange={e => updateField({ name, value: e.target.value })}
               onBlur={() => setHasBlurred(true)}
               value={formState[name].value}
