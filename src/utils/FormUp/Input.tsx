@@ -1,3 +1,5 @@
+// TODO change required to an optional callback or boolean
+
 import React, {
   ChangeEvent,
   useEffect,
@@ -153,7 +155,7 @@ interface InputPropsWithValidation extends CommonInputProps {
   required?: boolean;
   requiredMessage?: string;
   validate: (input: string, formState: FormState) => boolean;
-  validationMessage?: string;
+  validationMessage: string;
 }
 
 interface InputPropsWithRequired extends CommonInputProps {
@@ -167,5 +169,5 @@ interface InputPropsWithValidationAndRequired extends CommonInputProps {
   required: boolean;
   requiredMessage?: string;
   validate: (input: string, formState: FormState) => boolean;
-  validationMessage?: never;
+  validationMessage: string;
 }
