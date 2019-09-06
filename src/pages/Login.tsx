@@ -5,7 +5,7 @@ import { AuthState, useAuth } from '../hooks';
 import { setUser } from '../store/actions/authUser';
 import { User } from '../types';
 import { axiosInstance } from '../utils';
-import { Form, Input, FormData } from '../utils/FormUp';
+import { Form, Field, FormData } from '../utils/FormUp';
 
 export const Login: React.FC<RouteComponentProps> = props => {
   const dispatch = useDispatch();
@@ -39,8 +39,8 @@ export const Login: React.FC<RouteComponentProps> = props => {
           ) : (
             <div>
               <Form onSubmit={handleLogin} submitText="Login">
-                <Input name="username" placeholder="username" required />
-                <Input
+                <Field.Input name="username" placeholder="username" required />
+                <Field.Input
                   name="password"
                   placeholder="password"
                   required

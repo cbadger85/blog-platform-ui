@@ -9,7 +9,7 @@ import {
   RegisterActionPayload,
   UpdateFieldActionPayload,
   updateFieldAction,
-} from './state';
+} from '../state';
 
 export const Form: React.FC<FormProps> = ({
   children,

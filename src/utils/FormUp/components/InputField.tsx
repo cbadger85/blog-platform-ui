@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FormState } from './state';
-import { RequiredFunction } from './types';
-import { useRegisterField } from './utils';
+import { FormState } from '../state';
+import { RequiredFunction } from '../types';
+import { useRegisterField } from '../utils';
 
 enum ErrorMessageType {
   REQUIRED = 'REQUIRED',
@@ -9,7 +9,7 @@ enum ErrorMessageType {
   NONE = 'NONE',
 }
 
-export const Input: React.FC<InputProps> = ({
+export const InputField: React.FC<InputProps> = ({
   name,
   label,
   placeholder,
