@@ -1,13 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { FormState } from '../state';
 import { RequiredFunction } from '../types';
-import { useRegisterField } from '../utils';
-
-enum ErrorMessageType {
-  REQUIRED = 'REQUIRED',
-  VALIDATION = 'VALIDATION',
-  NONE = 'NONE',
-}
+import { useRegisterField, useFieldValidation } from '../utils';
 
 export const InputField: React.FC<InputProps> = ({
   name,
@@ -18,73 +12,23 @@ export const InputField: React.FC<InputProps> = ({
   validate,
   id,
   validationMessage,
-  requiredMessage = 'Required',
+  requiredMessage,
   ...inputProps
 }) => {
-  const { formState, updateField, updateIsValid } = useRegisterField(
+  const { formState, updateField } = useRegisterField({
     name,
     defaultValue,
     required,
-    validate
-  );
+    validate,
+  });
 
-  const [hasBlurred, setHasBlurred] = useState(false);
-  const [errorMessageType, setErrorMessageType] = useState(
-    ErrorMessageType.NONE
-  );
-
-  const isEmpty = useMemo(() => {
-    if (!required || !formState) {
-      return false;
-    }
-
-    if (typeof required === 'function') {
-      return required(formState);
-    }
-
-    return formState[name].value.length === 0;
-  }, [formState, name, required]);
-
-  const isValid = useMemo(() => {
-    if (!validate || !formState) {
-      return true;
-    }
-
-    return validate(formState[name].value, formState);
-  }, [formState, name, validate]);
-
-  useEffect(() => {
-    const setErrorMessage = () => {
-      if (!hasBlurred) {
-        return;
-      }
-
-      if (isEmpty) {
-        setErrorMessageType(ErrorMessageType.REQUIRED);
-        return;
-      }
-
-      if (!isValid) {
-        setErrorMessageType(ErrorMessageType.VALIDATION);
-        return;
-      }
-      setErrorMessageType(ErrorMessageType.NONE);
-    };
-
-    updateIsValid({ name, isValid: !isEmpty && isValid });
-    setErrorMessage();
-  }, [hasBlurred, isEmpty, isValid, name, updateIsValid]);
-
-  const handleShowError = (): string => {
-    switch (errorMessageType) {
-      case ErrorMessageType.REQUIRED:
-        return requiredMessage;
-      case ErrorMessageType.VALIDATION:
-        return validationMessage || '';
-      default:
-        return '';
-    }
-  };
+  const { setHasBlurred, errorMessage } = useFieldValidation({
+    name,
+    required,
+    validate,
+    validationMessage,
+    requiredMessage,
+  });
 
   return (
     <div>
@@ -112,7 +56,7 @@ export const InputField: React.FC<InputProps> = ({
               {...inputProps}
             />
           </label>
-          <div style={{ height: '1rem' }}>{handleShowError()}</div>
+          <div style={{ height: '1rem' }}>{errorMessage}</div>
         </>
       )}
     </div>
