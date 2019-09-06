@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormState } from './state';
 import { RequiredFunction } from './types';
 import { useRegisterField } from './utils';
@@ -21,7 +21,7 @@ export const Input: React.FC<InputProps> = ({
   requiredMessage = 'Required',
   ...inputProps
 }) => {
-  const { formState, updateField } = useRegisterField(
+  const { formState, updateField, updateIsValid } = useRegisterField(
     name,
     defaultValue,
     required,
@@ -33,39 +33,53 @@ export const Input: React.FC<InputProps> = ({
     ErrorMessageType.NONE
   );
 
-  const handleErrorMessageType = useCallback(() => {
-    const isEmpty = () => {
-      if (!required || !formState) {
-        return false;
+  const isEmpty = useMemo(() => {
+    if (!required || !formState) {
+      return false;
+    }
+
+    if (typeof required === 'function') {
+      return required(formState);
+    }
+
+    return formState[name].value.length === 0;
+  }, [formState, name, required]);
+
+  const isValid = useMemo(() => {
+    if (!validate || !formState) {
+      return true;
+    }
+
+    return validate(formState[name].value, formState);
+  }, [formState, name, validate]);
+
+  useEffect(
+    function checkFieldValidity() {
+      updateIsValid({ name, isValid: !isEmpty && isValid });
+    },
+    [isEmpty, isValid, name, updateIsValid]
+  );
+
+  useEffect(() => {
+    const setErrorMessage = () => {
+      if (!hasBlurred) {
+        return;
       }
 
-      if (typeof required === 'function') {
-        return required(formState);
+      if (isEmpty) {
+        setErrorMessageType(ErrorMessageType.REQUIRED);
+        return;
       }
 
-      return formState[name].value.length === 0;
+      if (!isValid) {
+        setErrorMessageType(ErrorMessageType.VALIDATION);
+        return;
+      }
+      setErrorMessageType(ErrorMessageType.NONE);
     };
 
-    const isValid = () =>
-      (validate && formState && validate(formState[name].value, formState)) ||
-      (formState && formState[name].value.length === 0);
-
-    if (!hasBlurred) {
-      return;
-    }
-
-    if (isEmpty()) {
-      setErrorMessageType(ErrorMessageType.REQUIRED);
-      return;
-    }
-
-    if (!isValid()) {
-      setErrorMessageType(ErrorMessageType.VALIDATION);
-      return;
-    }
-
-    setErrorMessageType(ErrorMessageType.NONE);
-  }, [formState, hasBlurred, name, required, validate]);
+    setErrorMessage();
+  }, [hasBlurred, isEmpty, isValid]);
 
   const handleShowError = (): string => {
     switch (errorMessageType) {
@@ -76,33 +90,6 @@ export const Input: React.FC<InputProps> = ({
       default:
         return '';
     }
-  };
-
-  useEffect(() => {
-    handleErrorMessageType();
-  }, [handleErrorMessageType]);
-
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const fieldValues = { name, value: e.target.value };
-    const inputIsEmpty =
-      typeof required === 'function'
-        ? required(formState)
-        : !e.target.value.trim();
-    const inputIsValid =
-      (validate && validate(e.target.value, formState)) ||
-      e.target.value.length === 0;
-
-    if (required && inputIsEmpty) {
-      updateField({ ...fieldValues, isValid: false });
-      return;
-    }
-
-    if (validate && !inputIsValid) {
-      updateField({ ...fieldValues, isValid: false });
-      return;
-    }
-
-    updateField({ ...fieldValues, isValid: true });
   };
 
   return (
@@ -119,7 +106,7 @@ export const Input: React.FC<InputProps> = ({
               </span>
             </span>
             <input
-              onChange={handleOnChange}
+              onChange={e => updateField({ name, value: e.target.value })}
               onBlur={() => setHasBlurred(true)}
               value={formState[name].value}
               id={id}

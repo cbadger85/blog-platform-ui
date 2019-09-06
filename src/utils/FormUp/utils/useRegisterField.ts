@@ -8,7 +8,7 @@ export const useRegisterField = (
   required: boolean | RequiredFunction | undefined,
   validate: ((input: string, formState: FormState) => boolean) | undefined
 ) => {
-  const { formState, updateField, registerField } = useContext(
+  const { formState, updateField, updateIsValid, registerField } = useContext(
     FormContext
   ) as FormContext;
 
@@ -46,5 +46,5 @@ export const useRegisterField = (
     });
   }, [defaultValue, isValid, registerField, name]);
 
-  return { formState, updateField };
+  return { formState, updateField, updateIsValid };
 };

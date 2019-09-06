@@ -7,7 +7,7 @@ import {
   formReducer,
   FormState,
   RegisterActionPayload,
-  UpdateActionPayload,
+  UpdateFieldActionPayload,
   updateFieldAction,
 } from './state';
 
@@ -21,7 +21,8 @@ export const Form: React.FC<FormProps> = ({
   const [formState, formDispatch] = useReducer(formReducer, undefined as never);
 
   const updateField = useCallback(
-    (payload: UpdateActionPayload) => formDispatch(updateFieldAction(payload)),
+    (payload: UpdateFieldActionPayload) =>
+      formDispatch(updateFieldAction(payload)),
     [formDispatch]
   );
 
@@ -31,10 +32,17 @@ export const Form: React.FC<FormProps> = ({
     [formDispatch]
   );
 
+  const updateIsValid = useCallback(
+    (payload: RegisterActionPayload) =>
+      formDispatch({ type: FormActionType.IS_VALID, payload }),
+    [formDispatch]
+  );
+
   const context = {
     formState,
     updateField,
     registerField,
+    updateIsValid,
   };
 
   const handleOnSubmit = (e: FormEvent) => {
