@@ -24,7 +24,7 @@ export const useRegisterField = (
 
       return true;
     };
-    // const isEmpty = required && !defaultValue.trim();
+
     const inputIsValid =
       (formState && validate && validate(defaultValue, formState)) || !required;
     if (isEmpty()) {

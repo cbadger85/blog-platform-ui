@@ -43,7 +43,7 @@ export const Input: React.FC<InputProps> = ({
         return required(formState);
       }
 
-      return true;
+      return formState[name].value.length === 0;
     };
 
     const isValid = () =>
@@ -54,12 +54,12 @@ export const Input: React.FC<InputProps> = ({
       return;
     }
 
-    if (isEmpty) {
+    if (isEmpty()) {
       setErrorMessageType(ErrorMessageType.REQUIRED);
       return;
     }
 
-    if (!isValid) {
+    if (!isValid()) {
       setErrorMessageType(ErrorMessageType.VALIDATION);
       return;
     }
