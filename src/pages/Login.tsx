@@ -42,12 +42,14 @@ export const Login: React.FC<RouteComponentProps> = props => {
                 <Input
                   id="username"
                   name="username"
+                  label="username"
                   placeholder="username"
                   required
                 />
                 <Input
                   id="password"
                   name="password"
+                  label="password"
                   placeholder="password"
                   required
                   type="password"
