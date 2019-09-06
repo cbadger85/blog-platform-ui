@@ -1,13 +1,7 @@
-import React, {
-  ChangeEvent,
-  useEffect,
-  useMemo,
-  useState,
-  useCallback,
-} from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { FormState } from './state';
-import { useRegisterField } from './utils';
 import { RequiredFunction } from './types';
+import { useRegisterField } from './utils';
 
 enum ErrorMessageType {
   REQUIRED = 'REQUIRED',
@@ -38,26 +32,23 @@ export const Input: React.FC<InputProps> = ({
     ErrorMessageType.NONE
   );
 
-  const isValid = useMemo(
-    () =>
-      (validate && formState && validate(formState[id].value, formState)) ||
-      (formState && formState[id].value.length === 0),
-    [formState, id, validate]
-  );
-
-  const isEmpty = useMemo(() => {
-    if (!required || !formState) {
-      return false;
-    }
-
-    if (typeof required === 'function') {
-      return required(formState);
-    }
-
-    return true;
-  }, [formState, required]);
-
   const handleErrorMessageType = useCallback(() => {
+    const isEmpty = () => {
+      if (!required || !formState) {
+        return false;
+      }
+
+      if (typeof required === 'function') {
+        return required(formState);
+      }
+
+      return true;
+    };
+
+    const isValid = () =>
+      (validate && formState && validate(formState[id].value, formState)) ||
+      (formState && formState[id].value.length === 0);
+
     if (!hasBlurred) {
       return;
     }
@@ -73,18 +64,17 @@ export const Input: React.FC<InputProps> = ({
     }
 
     setErrorMessageType(ErrorMessageType.NONE);
-  }, [hasBlurred, isEmpty, isValid]);
+  }, [formState, hasBlurred, id, required, validate]);
 
   const handleShowError = (): string => {
-    if (errorMessageType === ErrorMessageType.REQUIRED) {
-      return requiredMessage;
+    switch (errorMessageType) {
+      case ErrorMessageType.REQUIRED:
+        return requiredMessage;
+      case ErrorMessageType.VALIDATION:
+        return validationMessage || '';
+      default:
+        return '';
     }
-
-    if (errorMessageType === ErrorMessageType.VALIDATION) {
-      return validationMessage || '';
-    }
-
-    return '';
   };
 
   useEffect(() => {
