@@ -1,5 +1,3 @@
-// TODO change required to an optional callback or boolean
-
 import React, {
   ChangeEvent,
   useEffect,
@@ -9,6 +7,7 @@ import React, {
 } from 'react';
 import { FormState } from './state';
 import { useRegisterField } from './utils';
+import { RequiredFunction } from './types';
 
 enum ErrorMessageType {
   REQUIRED = 'REQUIRED',
@@ -23,7 +22,7 @@ export const Input: React.FC<InputProps> = ({
   defaultValue = '',
   required,
   validate,
-  validationMessage = 'Failed validation',
+  validationMessage,
   requiredMessage = 'Required',
   ...inputProps
 }) => {
@@ -46,10 +45,17 @@ export const Input: React.FC<InputProps> = ({
     [formState, id, validate]
   );
 
-  const isEmpty = useMemo(
-    () => !!required && formState && !formState[id].value.trim(),
-    [formState, id, required]
-  );
+  const isEmpty = useMemo(() => {
+    if (!required || !formState) {
+      return false;
+    }
+
+    if (typeof required === 'function') {
+      return required(formState);
+    }
+
+    return true;
+  }, [formState, required]);
 
   const handleErrorMessageType = useCallback(() => {
     if (!hasBlurred) {
@@ -69,13 +75,28 @@ export const Input: React.FC<InputProps> = ({
     setErrorMessageType(ErrorMessageType.NONE);
   }, [hasBlurred, isEmpty, isValid]);
 
+  const handleShowError = (): string => {
+    if (errorMessageType === ErrorMessageType.REQUIRED) {
+      return requiredMessage;
+    }
+
+    if (errorMessageType === ErrorMessageType.VALIDATION) {
+      return validationMessage || '';
+    }
+
+    return '';
+  };
+
   useEffect(() => {
     handleErrorMessageType();
   }, [handleErrorMessageType]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fieldValues = { id, value: e.target.value };
-    const inputIsEmpty = !e.target.value.trim();
+    const inputIsEmpty =
+      typeof required === 'function'
+        ? required(formState)
+        : !e.target.value.trim();
     const inputIsValid =
       (validate && validate(e.target.value, formState)) ||
       e.target.value.length === 0;
@@ -93,18 +114,6 @@ export const Input: React.FC<InputProps> = ({
     updateField({ ...fieldValues, isValid: true });
   };
 
-  const handleShowError = (): string => {
-    if (errorMessageType === ErrorMessageType.REQUIRED) {
-      return requiredMessage;
-    }
-
-    if (errorMessageType === ErrorMessageType.VALIDATION) {
-      return validationMessage || '';
-    }
-
-    return '';
-  };
-
   return (
     <div>
       {formState && (
@@ -112,7 +121,11 @@ export const Input: React.FC<InputProps> = ({
           <label htmlFor={id}>
             <span>
               {label}
-              <span style={{ color: 'red' }}>{required && '*'}</span>
+              <span style={{ color: 'red' }}>
+                {typeof required === 'function'
+                  ? formState && required(formState) && '*'
+                  : required && '*'}
+              </span>
             </span>
             <input
               onChange={handleOnChange}
@@ -120,7 +133,9 @@ export const Input: React.FC<InputProps> = ({
               value={formState[id].value}
               id={id}
               placeholder={placeholder}
-              required={required}
+              required={
+                typeof required === 'function' ? required(formState) : required
+              }
               {...inputProps}
             />
           </label>
@@ -137,7 +152,8 @@ type InputProps =
   | InputPropsWithRequired
   | InputPropsWithValidationAndRequired;
 
-interface CommonInputProps extends React.HTMLProps<HTMLInputElement> {
+type InputElement = Omit<React.HTMLProps<HTMLInputElement>, 'required'>;
+interface CommonInputProps extends InputElement {
   id: string;
   label?: string;
   placeholder?: string;
@@ -152,21 +168,21 @@ interface InputPropsWithoutValidationAndRequired extends CommonInputProps {
 }
 
 interface InputPropsWithValidation extends CommonInputProps {
-  required?: boolean;
-  requiredMessage?: string;
+  required?: never;
+  requiredMessage?: never;
   validate: (input: string, formState: FormState) => boolean;
   validationMessage: string;
 }
 
 interface InputPropsWithRequired extends CommonInputProps {
-  required: boolean;
+  required: boolean | RequiredFunction;
   requiredMessage?: string;
   validate?: never;
   validationMessage?: never;
 }
 
 interface InputPropsWithValidationAndRequired extends CommonInputProps {
-  required: boolean;
+  required: boolean | RequiredFunction;
   requiredMessage?: string;
   validate: (input: string, formState: FormState) => boolean;
   validationMessage: string;

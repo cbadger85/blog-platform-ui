@@ -1,10 +1,11 @@
 import { useContext, useEffect, useMemo } from 'react';
 import { FormContext, FormState } from '../state';
+import { RequiredFunction } from '../types';
 
 export const useRegisterField = (
   id: string,
   defaultValue: string,
-  required: boolean | undefined,
+  required: boolean | RequiredFunction | undefined,
   validate: ((input: string, formState: FormState) => boolean) | undefined
 ) => {
   const { formState, updateField, registerField } = useContext(
@@ -12,10 +13,21 @@ export const useRegisterField = (
   ) as FormContext;
 
   const isValid = useMemo(() => {
-    const isEmpty = required && !defaultValue.trim();
+    const isEmpty = () => {
+      if (!required || !formState) {
+        return false;
+      }
+
+      if (typeof required === 'function') {
+        return required(formState);
+      }
+
+      return true;
+    };
+    // const isEmpty = required && !defaultValue.trim();
     const inputIsValid =
       (formState && validate && validate(defaultValue, formState)) || !required;
-    if (required && isEmpty) {
+    if (isEmpty()) {
       return false;
     }
 
