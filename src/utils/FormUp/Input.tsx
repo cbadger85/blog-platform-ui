@@ -53,13 +53,6 @@ export const Input: React.FC<InputProps> = ({
     return validate(formState[name].value, formState);
   }, [formState, name, validate]);
 
-  useEffect(
-    function checkFieldValidity() {
-      updateIsValid({ name, isValid: !isEmpty && isValid });
-    },
-    [isEmpty, isValid, name, updateIsValid]
-  );
-
   useEffect(() => {
     const setErrorMessage = () => {
       if (!hasBlurred) {
@@ -78,8 +71,9 @@ export const Input: React.FC<InputProps> = ({
       setErrorMessageType(ErrorMessageType.NONE);
     };
 
+    updateIsValid({ name, isValid: !isEmpty && isValid });
     setErrorMessage();
-  }, [hasBlurred, isEmpty, isValid]);
+  }, [hasBlurred, isEmpty, isValid, name, updateIsValid]);
 
   const handleShowError = (): string => {
     switch (errorMessageType) {
