@@ -28,7 +28,7 @@ export const Login: React.FC<RouteComponentProps> = props => {
 
   switch (isAuth) {
     case AuthState.IS_LOADING:
-      return <div>Loading...</div>;
+      return <div>Loading...</div>; // TODO need to make a loader for this
     case AuthState.IS_AUTHORIZED:
       return <Redirect to={from} />;
     default:
@@ -39,17 +39,9 @@ export const Login: React.FC<RouteComponentProps> = props => {
           ) : (
             <div>
               <Form onSubmit={handleLogin} submitText="Login">
+                <Input name="username" placeholder="username" required />
                 <Input
-                  id="username"
-                  name="username"
-                  label="username"
-                  placeholder="username"
-                  required
-                />
-                <Input
-                  id="password"
                   name="password"
-                  label="password"
                   placeholder="password"
                   required
                   type="password"
