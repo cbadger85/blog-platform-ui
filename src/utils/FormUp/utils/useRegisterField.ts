@@ -3,7 +3,7 @@ import { FormContext, FormState } from '../state';
 import { RequiredFunction } from '../types';
 
 export const useRegisterField = (
-  id: string,
+  name: string,
   defaultValue: string,
   required: boolean | RequiredFunction | undefined,
   validate: ((input: string, formState: FormState) => boolean) | undefined
@@ -40,11 +40,11 @@ export const useRegisterField = (
 
   useEffect(() => {
     registerField({
-      id,
+      name,
       value: defaultValue,
       isValid: isValid,
     });
-  }, [id, defaultValue, isValid, registerField]);
+  }, [defaultValue, isValid, registerField, name]);
 
   return { formState, updateField };
 };

@@ -88,5 +88,5 @@ interface FormProps {
 }
 
 export interface FormData {
-  [id: string]: string;
+  [name: string]: string;
 }

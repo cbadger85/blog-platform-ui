@@ -8,12 +8,15 @@ export const formReducer = (
     case FormActionType.UPDATE:
       return {
         ...state,
-        [payload.id]: { value: payload.value, isValid: payload.isValid },
+        [payload.name]: { value: payload.value, isValid: payload.isValid },
       };
     case FormActionType.REGISTER:
       return {
         ...state,
-        [payload.id]: { value: payload.value || '', isValid: payload.isValid },
+        [payload.name]: {
+          value: payload.value || '',
+          isValid: payload.isValid,
+        },
       };
     default:
       return state;

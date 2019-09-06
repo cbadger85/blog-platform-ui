@@ -10,18 +10,19 @@ enum ErrorMessageType {
 }
 
 export const Input: React.FC<InputProps> = ({
-  id,
+  name,
   label,
   placeholder,
   defaultValue = '',
   required,
   validate,
+  id,
   validationMessage,
   requiredMessage = 'Required',
   ...inputProps
 }) => {
   const { formState, updateField } = useRegisterField(
-    id,
+    name,
     defaultValue,
     required,
     validate
@@ -46,8 +47,8 @@ export const Input: React.FC<InputProps> = ({
     };
 
     const isValid = () =>
-      (validate && formState && validate(formState[id].value, formState)) ||
-      (formState && formState[id].value.length === 0);
+      (validate && formState && validate(formState[name].value, formState)) ||
+      (formState && formState[name].value.length === 0);
 
     if (!hasBlurred) {
       return;
@@ -64,7 +65,7 @@ export const Input: React.FC<InputProps> = ({
     }
 
     setErrorMessageType(ErrorMessageType.NONE);
-  }, [formState, hasBlurred, id, required, validate]);
+  }, [formState, hasBlurred, name, required, validate]);
 
   const handleShowError = (): string => {
     switch (errorMessageType) {
@@ -82,7 +83,7 @@ export const Input: React.FC<InputProps> = ({
   }, [handleErrorMessageType]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const fieldValues = { id, value: e.target.value };
+    const fieldValues = { name, value: e.target.value };
     const inputIsEmpty =
       typeof required === 'function'
         ? required(formState)
@@ -108,7 +109,7 @@ export const Input: React.FC<InputProps> = ({
     <div>
       {formState && (
         <>
-          <label htmlFor={id}>
+          <label htmlFor={id ? id : undefined}>
             <span>
               {label}
               <span style={{ color: 'red' }}>
@@ -120,7 +121,7 @@ export const Input: React.FC<InputProps> = ({
             <input
               onChange={handleOnChange}
               onBlur={() => setHasBlurred(true)}
-              value={formState[id].value}
+              value={formState[name].value}
               id={id}
               placeholder={placeholder}
               required={
@@ -144,7 +145,8 @@ type InputProps =
 
 type InputElement = Omit<React.HTMLProps<HTMLInputElement>, 'required'>;
 interface CommonInputProps extends InputElement {
-  id: string;
+  name: string;
+  id?: string;
   label?: string;
   placeholder?: string;
   defaultValue?: string;

@@ -19,13 +19,13 @@ export interface FormAction {
 }
 
 export interface UpdateActionPayload {
-  id: string;
+  name: string;
   value: string;
   isValid: boolean;
 }
 
 export interface RegisterActionPayload {
-  id: string;
+  name: string;
   value?: string;
   isValid: boolean;
 }
