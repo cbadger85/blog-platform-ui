@@ -19,10 +19,7 @@ body {
 }
 
 .inputFieldWrapper {
-  display: flex;
   width: 100%;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .inputLabel {
@@ -66,22 +63,36 @@ input.input {
   font-size: 1rem;
   padding: 0.2rem;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  transition: 0.2s ease-in background-color;
+  transition: 0.1s ease-in background-color;
 }
 
 input.input:focus {
   outline: none;
-  border-color: rgba(101, 101, 185, 0.4);
+  border-color: rgba(0, 0, 255, 0.4);
 }
 
 input.input_error {
   background-color: rgba(255, 0, 0, 0.1);
   border-color: rgba(255, 0, 0, 0.4);
-  transition: 0.2s ease-in background-color;
+  transition: 0.1s ease-in background-color;
 }
 
 input.input_error:focus {
   border-color: rgba(255, 0, 0, 0.7);
+}
+
+.inputErrorMessage {
+  color: rgba(255, 0, 0, 0.8);
+  margin: 0.2rem 0;
+  height: 1.3rem;
+  font-style: oblique;
+  opacity: 0;
+  transition: 0.1s ease-in opacity;
+}
+
+.inputErrorMessage_visible {
+  opacity: 1;
+  transition: 0.1s ease-in opacity;
 }
 
 .errorIcon {
@@ -97,17 +108,15 @@ input.input_error:focus {
   margin-right: 0.2rem;
 }
 
-.inputErrorMessage {
-  color: rgba(255, 0, 0, 0.8);
-  margin: 0.2rem 8.7rem 0;
-  /* margin-left: 8.7rem; */
-  height: 1.3rem;
-  font-style: oblique;
-  opacity: 0;
-  transition: 0.2s ease-in opacity;
-}
+/* move labels to on top of inputs for sizes < 660px */
+@media (min-width: 660px) {
+  .inputFieldWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-.inputErrorMessage_visible {
-  opacity: 1;
-  transition: 0.2s ease-in opacity;
+  .inputErrorMessage {
+    margin: 0.2rem 8.7rem 0;
+  }
 }

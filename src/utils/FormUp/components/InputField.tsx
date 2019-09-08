@@ -13,8 +13,8 @@ export const InputField: React.FC<InputProps> = ({
   validate,
   id,
   validationMessage,
-  requiredMessage,
   className = '',
+  style,
   ...inputProps
 }) => {
   const { formState, updateField } = useRegisterField({
@@ -29,11 +29,10 @@ export const InputField: React.FC<InputProps> = ({
     required,
     validate,
     validationMessage,
-    requiredMessage,
   });
 
   return (
-    <>
+    <div style={style} className={className}>
       {formState && (
         <>
           <label htmlFor={id ? id : undefined}>
@@ -56,7 +55,7 @@ export const InputField: React.FC<InputProps> = ({
                 )}
               </span>
               <input
-                className={`${styles.input} ${className} ${errorMessage &&
+                className={`${styles.input} ${errorMessage &&
                   styles.input_error}`}
                 name={name}
                 onChange={e => updateField({ name, value: e.target.value })}
@@ -82,15 +81,13 @@ export const InputField: React.FC<InputProps> = ({
           </label>
         </>
       )}
-    </>
+    </div>
   );
 };
 
 type InputProps =
   | InputPropsWithoutValidationAndRequired
-  | InputPropsWithValidation
-  | InputPropsWithRequired
-  | InputPropsWithValidationAndRequired;
+  | InputPropsWithValidation;
 
 type InputElement = Omit<React.HTMLProps<HTMLInputElement>, 'required'>;
 interface CommonInputProps extends InputElement {
@@ -100,32 +97,16 @@ interface CommonInputProps extends InputElement {
   placeholder?: string;
   defaultValue?: string;
   className?: string;
+  style?: React.CSSProperties;
+  required?: boolean | RequiredFunction;
 }
 
 interface InputPropsWithoutValidationAndRequired extends CommonInputProps {
-  required?: never;
-  requiredMessage?: never;
   validate?: never;
   validationMessage?: never;
 }
 
 interface InputPropsWithValidation extends CommonInputProps {
-  required?: never;
-  requiredMessage?: never;
-  validate: (input: string, formState: FormState) => boolean;
-  validationMessage: string;
-}
-
-interface InputPropsWithRequired extends CommonInputProps {
-  required: boolean | RequiredFunction;
-  requiredMessage?: string;
-  validate?: never;
-  validationMessage?: never;
-}
-
-interface InputPropsWithValidationAndRequired extends CommonInputProps {
-  required: boolean | RequiredFunction;
-  requiredMessage?: string;
   validate: (input: string, formState: FormState) => boolean;
   validationMessage: string;
 }

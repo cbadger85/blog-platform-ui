@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState, useContext } from 'react';
 import { FormContext, FormState } from '../state';
 import { RequiredFunction } from '../types';
+import lowerCase from 'lodash/lowerCase';
+import capitalize from 'lodash/capitalize';
 
 export const useFieldValidation = ({
   name,
   required,
   validate,
-  requiredMessage,
   validationMessage,
 }: UseFieldValidation) => {
   const [hasBlurred, setHasBlurred] = useState(false);
@@ -41,7 +42,7 @@ export const useFieldValidation = ({
       }
 
       if (isEmpty) {
-        setErrorMessage(requiredMessage || 'Required');
+        setErrorMessage(`${capitalize(lowerCase(name))} is required`);
         return;
       }
 
@@ -54,15 +55,7 @@ export const useFieldValidation = ({
 
     updateIsValid({ name, isValid: !isEmpty && isValid });
     handleSetErrorMessage();
-  }, [
-    hasBlurred,
-    isEmpty,
-    isValid,
-    name,
-    requiredMessage,
-    updateIsValid,
-    validationMessage,
-  ]);
+  }, [hasBlurred, isEmpty, isValid, name, updateIsValid, validationMessage]);
 
   return { setHasBlurred, errorMessage };
 };
