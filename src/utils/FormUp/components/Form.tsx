@@ -75,14 +75,24 @@ export const Form: React.FC<FormProps> = ({
     <FormContext.Provider value={context}>
       <form onSubmit={handleOnSubmit}>
         {children}
-        <button type="submit" disabled={formIsInvalid()}>
-          {submitText ? submitText : 'Submit'}
-        </button>
-        {onCancel && (
-          <button type="button" onClick={handleOnCancel}>
-            {cancelText ? cancelText : 'cancel'}
+        <div style={{ marginLeft: '8.2rem' }}>
+          <button
+            type="submit"
+            disabled={formIsInvalid()}
+            style={{ margin: '.5rem', padding: '.2rem .5rem' }}
+          >
+            {submitText ? submitText : 'Submit'}
           </button>
-        )}
+          {onCancel && (
+            <button
+              type="button"
+              onClick={handleOnCancel}
+              style={{ margin: '.5rem', padding: '.2rem .5rem' }}
+            >
+              {cancelText ? cancelText : 'cancel'}
+            </button>
+          )}
+        </div>
       </form>
     </FormContext.Provider>
   );

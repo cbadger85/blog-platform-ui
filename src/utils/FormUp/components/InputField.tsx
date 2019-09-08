@@ -2,6 +2,7 @@ import React from 'react';
 import { FormState } from '../state';
 import { RequiredFunction } from '../types';
 import { useRegisterField, useFieldValidation } from '../utils';
+import styles from './inputField.module.css';
 
 export const InputField: React.FC<InputProps> = ({
   name,
@@ -13,6 +14,7 @@ export const InputField: React.FC<InputProps> = ({
   id,
   validationMessage,
   requiredMessage,
+  className = '',
   ...inputProps
 }) => {
   const { formState, updateField } = useRegisterField({
@@ -31,35 +33,56 @@ export const InputField: React.FC<InputProps> = ({
   });
 
   return (
-    <div>
+    <>
       {formState && (
         <>
           <label htmlFor={id ? id : undefined}>
-            <span>
-              {label}
-              <span style={{ color: 'red' }}>
-                {typeof required === 'function'
-                  ? formState && required(formState) && '*'
-                  : required && '*'}
+            <div className={styles.inputFieldWrapper}>
+              <span className={styles.inputLabel}>
+                {label ? (
+                  <>
+                    {label}
+                    {typeof required === 'function'
+                      ? formState &&
+                        required(formState) && (
+                          <span className={styles.inputLabel_required} />
+                        )
+                      : required && (
+                          <span className={styles.inputLabel_required} />
+                        )}
+                  </>
+                ) : (
+                  <span className={styles.input_required} />
+                )}
               </span>
-            </span>
-            <input
-              name={name}
-              onChange={e => updateField({ name, value: e.target.value })}
-              onBlur={() => setHasBlurred(true)}
-              value={formState[name].value}
-              id={id}
-              placeholder={placeholder}
-              required={
-                typeof required === 'function' ? required(formState) : required
-              }
-              {...inputProps}
-            />
+              <input
+                className={`${styles.input} ${className} ${errorMessage &&
+                  styles.input_error}`}
+                name={name}
+                onChange={e => updateField({ name, value: e.target.value })}
+                onBlur={() => setHasBlurred(true)}
+                value={formState[name].value}
+                id={id}
+                placeholder={placeholder}
+                required={
+                  typeof required === 'function'
+                    ? required(formState)
+                    : required
+                }
+                {...inputProps}
+              />
+            </div>
+            <div
+              className={`${styles.inputErrorMessage} ${errorMessage &&
+                styles.inputErrorMessage_visible}`}
+            >
+              <span className={styles.errorIcon}>!</span>
+              {errorMessage}
+            </div>
           </label>
-          <div style={{ height: '1rem' }}>{errorMessage}</div>
         </>
       )}
-    </div>
+    </>
   );
 };
 
@@ -76,6 +99,7 @@ interface CommonInputProps extends InputElement {
   label?: string;
   placeholder?: string;
   defaultValue?: string;
+  className?: string;
 }
 
 interface InputPropsWithoutValidationAndRequired extends CommonInputProps {

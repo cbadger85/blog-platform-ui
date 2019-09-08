@@ -1,0 +1,113 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 3em;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #fefefe;
+}
+
+.inputFieldWrapper {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inputLabel {
+  flex: 0 0 8rem;
+  text-align: right;
+  margin-right: 0.75rem;
+}
+
+.inputLabel_required {
+  position: relative;
+}
+
+.inputLabel_required::after {
+  content: '*';
+  position: absolute;
+  color: red;
+  right: -0.4rem;
+  top: 0;
+}
+
+.input_required {
+  position: relative;
+}
+
+.input_required::after {
+  content: '*';
+  position: absolute;
+  color: red;
+  right: -0.4rem;
+  top: -0.6rem;
+}
+
+.inputWrapper {
+  width: 100%;
+}
+
+input.input {
+  width: 100%;
+  height: 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.2rem;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  transition: 0.2s ease-in background-color;
+}
+
+input.input:focus {
+  outline: none;
+  border-color: rgba(101, 101, 185, 0.4);
+}
+
+input.input_error {
+  background-color: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.4);
+  transition: 0.2s ease-in background-color;
+}
+
+input.input_error:focus {
+  border-color: rgba(255, 0, 0, 0.7);
+}
+
+.errorIcon {
+  background-color: rgba(255, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.8);
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  text-align: center;
+  border-radius: 100%;
+  font-style: normal;
+  font-weight: bold;
+  margin-right: 0.2rem;
+}
+
+.inputErrorMessage {
+  color: rgba(255, 0, 0, 0.8);
+  margin: 0.2rem 8.7rem 0;
+  /* margin-left: 8.7rem; */
+  height: 1.3rem;
+  font-style: oblique;
+  opacity: 0;
+  transition: 0.2s ease-in opacity;
+}
+
+.inputErrorMessage_visible {
+  opacity: 1;
+  transition: 0.2s ease-in opacity;
+}
