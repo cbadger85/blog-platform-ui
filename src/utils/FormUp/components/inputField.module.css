@@ -83,7 +83,7 @@ input.input_error {
 }
 
 input.input_error:focus {
-  border-color: rgba(255, 0, 0, 0.7);
+  border-color: rgba(255, 0, 0, 0.9);
 }
 
 .inputErrorMessage {

@@ -7,9 +7,10 @@ import {
   formReducer,
   FormState,
   RegisterActionPayload,
-  UpdateFieldActionPayload,
   updateFieldAction,
+  UpdateFieldActionPayload,
 } from '../state';
+import { Button } from './Button';
 
 export const Form: React.FC<FormProps> = ({
   children,
@@ -17,6 +18,8 @@ export const Form: React.FC<FormProps> = ({
   submitText,
   onCancel,
   cancelText,
+  submitButtonAs,
+  cancelButtonAs,
 }) => {
   const [formState, formDispatch] = useReducer(formReducer, undefined as never);
 
@@ -58,7 +61,7 @@ export const Form: React.FC<FormProps> = ({
   };
 
   const handleOnCancel = () => {
-    onCancel && onCancel();
+    onCancel && onCancel(formState);
   };
 
   const formIsInvalid = (): boolean => {
@@ -76,21 +79,35 @@ export const Form: React.FC<FormProps> = ({
       <form onSubmit={handleOnSubmit}>
         {children}
         <div style={{ marginLeft: '8.2rem' }}>
-          <button
-            type="submit"
-            disabled={formIsInvalid()}
-            style={{ margin: '.5rem', padding: '.2rem .5rem' }}
-          >
-            {submitText ? submitText : 'Submit'}
-          </button>
-          {onCancel && (
-            <button
-              type="button"
-              onClick={handleOnCancel}
+          {submitButtonAs ? (
+            submitButtonAs({
+              submit: handleOnSubmit,
+              disabled: formIsInvalid(),
+              formState,
+            })
+          ) : (
+            <Button
+              type="submit"
+              disabled={formIsInvalid()}
               style={{ margin: '.5rem', padding: '.2rem .5rem' }}
             >
-              {cancelText ? cancelText : 'cancel'}
-            </button>
+              {submitText ? submitText : 'Submit'}
+            </Button>
+          )}
+          {(onCancel || cancelButtonAs) && (
+            <>
+              {cancelButtonAs ? (
+                cancelButtonAs(formState)
+              ) : (
+                <Button
+                  type="button"
+                  onClick={handleOnCancel}
+                  style={{ margin: '.5rem', padding: '.2rem .5rem' }}
+                >
+                  {cancelText ? cancelText : 'cancel'}
+                </Button>
+              )}
+            </>
           )}
         </div>
       </form>
@@ -98,13 +115,35 @@ export const Form: React.FC<FormProps> = ({
   );
 };
 
-interface FormProps {
+type FormProps = FormPropsCancelButton | FormPropsInjectedCancelButton;
+
+interface FormBaseProps {
   onSubmit: (values: FormData) => void;
   submitText?: string;
-  onCancel?: () => void;
   cancelText?: string;
+  submitButtonAs?: React.FC<InjectedSubmitButtonProps>;
+}
+
+interface FormPropsCancelButton extends FormBaseProps {
+  onCancel?: (formState: FormState) => void;
+  cancelButtonAs?: never;
+}
+
+interface FormPropsInjectedCancelButton extends FormBaseProps {
+  onCancel?: never;
+  cancelButtonAs?: React.FC<InjectedCancelButtonProps>;
 }
 
 export interface FormData {
   [name: string]: string;
+}
+
+interface InjectedSubmitButtonProps {
+  submit: (e: FormEvent<Element>) => void;
+  disabled: boolean;
+  formState: FormState;
+}
+
+interface InjectedCancelButtonProps {
+  formState: FormState;
 }

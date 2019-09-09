@@ -37,21 +37,30 @@ export const Login: React.FC<RouteComponentProps> = props => {
           {isLoggedIn ? (
             <Redirect to={from} />
           ) : (
-            <div>
-              <Form
-                onSubmit={handleLogin}
-                submitText="Login"
-                onCancel={() => null}
-              >
-                <Field.Input label="username" name="username" required />
-                <Field.Input
-                  label="password"
-                  name="password"
-                  required
-                  type="password"
-                />
-              </Form>
-            </div>
+            <Form
+              onSubmit={handleLogin}
+              submitText="Login"
+              // onCancel={() => null}
+              submitButtonAs={injectedProps => (
+                <div
+                  onClick={() => console.log(injectedProps.formState)}
+                  style={{ color: 'green' }}
+                >
+                  hi{console.log('props', injectedProps)}
+                </div>
+              )}
+              cancelButtonAs={() => (
+                <div onClick={() => console.log('clicked')}>cancel</div>
+              )}
+            >
+              <Field.Input label="username" name="username" required />
+              <Field.Input
+                label="password"
+                name="password"
+                required
+                type="password"
+              />
+            </Form>
           )}
         </>
       );
