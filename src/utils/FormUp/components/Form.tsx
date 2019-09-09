@@ -61,7 +61,7 @@ export const Form: React.FC<FormProps> = ({
   };
 
   const handleOnCancel = () => {
-    onCancel && onCancel(formState);
+    onCancel && onCancel();
   };
 
   const formIsInvalid = (): boolean => {
@@ -81,7 +81,7 @@ export const Form: React.FC<FormProps> = ({
         <div style={{ marginLeft: '8.2rem' }}>
           {submitButtonAs ? (
             submitButtonAs({
-              submit: handleOnSubmit,
+              onSubmit: handleOnSubmit,
               disabled: formIsInvalid(),
               formState,
             })
@@ -97,7 +97,7 @@ export const Form: React.FC<FormProps> = ({
           {(onCancel || cancelButtonAs) && (
             <>
               {cancelButtonAs ? (
-                cancelButtonAs(formState)
+                cancelButtonAs()
               ) : (
                 <Button
                   type="button"
@@ -121,25 +121,25 @@ interface FormBaseProps {
   onSubmit: (values: FormData) => void;
   submitText?: string;
   cancelText?: string;
-  submitButtonAs?: React.FC<InjectedSubmitButtonProps>;
+  submitButtonAs?: React.FC<SubmitButtonProps>;
 }
 
 interface FormPropsCancelButton extends FormBaseProps {
-  onCancel?: (formState: FormState) => void;
+  onCancel?: () => void;
   cancelButtonAs?: never;
 }
 
 interface FormPropsInjectedCancelButton extends FormBaseProps {
   onCancel?: never;
-  cancelButtonAs?: React.FC<InjectedCancelButtonProps>;
+  cancelButtonAs?: () => JSX.Element;
 }
 
 export interface FormData {
   [name: string]: string;
 }
 
-interface InjectedSubmitButtonProps {
-  submit: (e: FormEvent<Element>) => void;
+export interface SubmitButtonProps {
+  onSubmit: (e: FormEvent<Element>) => void;
   disabled: boolean;
   formState: FormState;
 }

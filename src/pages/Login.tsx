@@ -40,18 +40,7 @@ export const Login: React.FC<RouteComponentProps> = props => {
             <Form
               onSubmit={handleLogin}
               submitText="Login"
-              // onCancel={() => null}
-              submitButtonAs={injectedProps => (
-                <div
-                  onClick={() => console.log(injectedProps.formState)}
-                  style={{ color: 'green' }}
-                >
-                  hi{console.log('props', injectedProps)}
-                </div>
-              )}
-              cancelButtonAs={() => (
-                <div onClick={() => console.log('clicked')}>cancel</div>
-              )}
+              onCancel={() => null}
             >
               <Field.Input label="username" name="username" required />
               <Field.Input
