@@ -40,7 +40,7 @@ export const InputField: React.FC<InputProps> = ({
               <span className={styles.inputLabel}>
                 {label ? (
                   <>
-                    {label}
+                    <span className={styles.inputLabel_text}>{label}</span>
                     {typeof required === 'function'
                       ? formState &&
                         required(formState) && (

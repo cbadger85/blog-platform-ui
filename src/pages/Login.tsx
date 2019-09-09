@@ -43,16 +43,10 @@ export const Login: React.FC<RouteComponentProps> = props => {
                 submitText="Login"
                 onCancel={() => null}
               >
-                <Field.Input
-                  label="username"
-                  name="username"
-                  placeholder="username"
-                  required
-                />
+                <Field.Input label="username" name="username" required />
                 <Field.Input
                   label="password"
                   name="password"
-                  placeholder="password"
                   required
                   type="password"
                 />

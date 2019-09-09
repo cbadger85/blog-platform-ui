@@ -28,6 +28,10 @@ body {
   margin-right: 0.75rem;
 }
 
+.inputLabel_text {
+  filter: contrast(10%);
+}
+
 .inputLabel_required {
   position: relative;
 }
@@ -63,6 +67,7 @@ input.input {
   font-size: 1rem;
   padding: 0.2rem;
   border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.95);
   transition: 0.1s ease-in background-color;
 }
 
@@ -72,7 +77,7 @@ input.input:focus {
 }
 
 input.input_error {
-  background-color: rgba(255, 0, 0, 0.1);
+  background-color: rgb(252, 190, 190);
   border-color: rgba(255, 0, 0, 0.4);
   transition: 0.1s ease-in background-color;
 }
