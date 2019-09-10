@@ -33,7 +33,7 @@
   position: absolute;
   color: red;
   right: -0.4rem;
-  top: -0.6rem;
+  bottom: 0;
 }
 
 .inputWrapper {

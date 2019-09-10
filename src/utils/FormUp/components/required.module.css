@@ -1,0 +1,23 @@
+.inputLabel_required {
+  position: relative;
+}
+
+.inputLabel_required::after {
+  content: '*';
+  position: absolute;
+  color: red;
+  right: -0.4rem;
+  top: 0;
+}
+
+.input_required {
+  position: relative;
+}
+
+.input_required::after {
+  content: '*';
+  position: absolute;
+  color: red;
+  right: -0.4rem;
+  bottom: 0;
+}

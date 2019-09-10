@@ -151,7 +151,3 @@ export interface SubmitButtonProps {
   disabled: boolean;
   formState: FormState;
 }
-
-interface InjectedCancelButtonProps {
-  formState: FormState;
-}

@@ -3,6 +3,7 @@ import { FormState } from '../state';
 import { RequiredFunction } from '../types';
 import { useRegisterField, useFieldValidation } from '../utils';
 import styles from './inputField.module.css';
+import { Required } from './Required';
 
 export const InputField: React.FC<InputProps> = ({
   name,
@@ -31,6 +32,14 @@ export const InputField: React.FC<InputProps> = ({
     validationMessage,
   });
 
+  const showRequired = () => {
+    if (typeof required === 'function') {
+      return required(formState);
+    }
+
+    return required;
+  };
+
   return (
     <div style={style} className={className}>
       {formState && (
@@ -38,21 +47,10 @@ export const InputField: React.FC<InputProps> = ({
           <label htmlFor={id ? id : undefined}>
             <div className={styles.inputFieldWrapper}>
               <span className={styles.inputLabel}>
-                {label ? (
-                  <>
-                    <span className={styles.inputLabel_text}>{label}</span>
-                    {typeof required === 'function'
-                      ? formState &&
-                        required(formState) && (
-                          <span className={styles.inputLabel_required} />
-                        )
-                      : required && (
-                          <span className={styles.inputLabel_required} />
-                        )}
-                  </>
-                ) : (
-                  <span className={styles.input_required} />
+                {label && (
+                  <span className={styles.inputLabel_text}>{label}</span>
                 )}
+                {showRequired() && <Required hasLabel={!!label} />}
               </span>
               <input
                 className={`${styles.input} ${errorMessage &&
