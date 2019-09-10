@@ -1,7 +1,17 @@
 import React from 'react';
+import styles from './button.module.css';
 
-export const Button: React.FC<ButtonProps> = props => {
-  return <button {...props} />;
+export const Button: React.FC<ButtonProps> = ({
+  className = '',
+  color = 'primary',
+  ...props
+}) => {
+  return (
+    <button
+      className={`${styles.button} ${styles[color]} ${className}`}
+      {...props}
+    />
+  );
 };
 
 interface ButtonProps
@@ -9,5 +19,5 @@ interface ButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  color?: string;
+  color?: 'primary' | 'info' | 'warn' | 'danger';
 }

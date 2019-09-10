@@ -11,6 +11,7 @@ import {
   UpdateFieldActionPayload,
 } from '../state';
 import { Button } from './Button';
+import styles from './form.module.css';
 
 export const Form: React.FC<FormProps> = ({
   children,
@@ -78,7 +79,10 @@ export const Form: React.FC<FormProps> = ({
     <FormContext.Provider value={context}>
       <form onSubmit={handleOnSubmit}>
         {children}
-        <div style={{ marginLeft: '8.2rem' }}>
+        <div
+          className={`${styles.formWrapper} ${(onCancel || cancelButtonAs) &&
+            styles.cancel}`}
+        >
           {submitButtonAs ? (
             submitButtonAs({
               onSubmit: handleOnSubmit,
@@ -86,11 +90,7 @@ export const Form: React.FC<FormProps> = ({
               formState,
             })
           ) : (
-            <Button
-              type="submit"
-              disabled={formIsInvalid()}
-              style={{ margin: '.5rem', padding: '.2rem .5rem' }}
-            >
+            <Button type="submit" disabled={formIsInvalid()}>
               {submitText ? submitText : 'Submit'}
             </Button>
           )}
@@ -99,12 +99,8 @@ export const Form: React.FC<FormProps> = ({
               {cancelButtonAs ? (
                 cancelButtonAs()
               ) : (
-                <Button
-                  type="button"
-                  onClick={handleOnCancel}
-                  style={{ margin: '.5rem', padding: '.2rem .5rem' }}
-                >
-                  {cancelText ? cancelText : 'cancel'}
+                <Button type="button" onClick={handleOnCancel} color="danger">
+                  {cancelText ? cancelText : 'Cancel'}
                 </Button>
               )}
             </>

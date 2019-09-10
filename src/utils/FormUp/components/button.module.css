@@ -1,0 +1,80 @@
+.button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  outline: inherit;
+  padding: 0.5rem 2rem;
+  box-shadow: 0 0.1rem 1rem rgba(0, 0, 0, 0.1);
+  transition: 0.1s linear all;
+  border-radius: 3px;
+}
+
+.button:hover {
+  transform: translateY(-0.05rem);
+  box-shadow: 0 0.3rem 1rem rgba(0, 0, 0, 0.1);
+  transition: 0.1s linear all;
+}
+
+.button:focus {
+  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.1);
+  transition: 0.1s linear all;
+}
+
+.button:active {
+  transform: translateY(0.025rem);
+  transition: 0.1s linear all;
+  box-shadow: none;
+}
+
+.button:disabled {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.button:disabled:hover {
+  box-shadow: 0 0.1rem 1rem rgba(0, 0, 0, 0.1);
+  transform: none;
+}
+
+.primary {
+  border: 1px solid #20ee7d;
+  background-color: #20ee7d;
+  color: #003318;
+}
+
+.primary:focus {
+  border: 1px solid #00411d;
+}
+
+.info {
+  border: 1px solid #209cee;
+  background-color: #209cee;
+  color: #ddf2ff;
+}
+
+.info:focus {
+  border: 1px solid #0030cc;
+}
+
+.warn {
+  border: 1px solid #ffd900;
+  background-color: #ffd900;
+  color: #3f3215;
+}
+
+.warn:focus {
+  border: 1px solid #917231;
+}
+
+.danger {
+  border: 1px solid #ff004c;
+  background-color: #ff004c;
+  color: #ffdae5;
+}
+
+.danger:focus {
+  border: 1px solid #5f001d;
+}

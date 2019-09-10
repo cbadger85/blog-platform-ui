@@ -1,0 +1,18 @@
+.formWrapper {
+  display: flex;
+  justify-content: center;
+
+  margin: auto;
+  max-width: 15rem; /* TODO: revisit this after buttons are styled */
+}
+
+.cancel {
+  justify-content: space-between;
+}
+
+@media (min-width: 660px) {
+  .formWrapper {
+    margin-left: 8.7rem;
+    justify-content: space-between;
+  }
+}
