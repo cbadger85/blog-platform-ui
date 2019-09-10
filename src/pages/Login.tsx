@@ -51,6 +51,9 @@ export const Login: React.FC<RouteComponentProps> = props => {
                 maxWidth: '30rem',
                 minWidth: '20rem',
                 margin: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
               }}
             >
               <Form onSubmit={handleLogin} submitText="Login">
