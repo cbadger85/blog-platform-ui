@@ -12,7 +12,7 @@
 
 @media (min-width: 660px) {
   .formWrapper {
-    margin-left: 8.7rem;
     justify-content: space-between;
+    margin: 0;
   }
 }

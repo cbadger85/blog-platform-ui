@@ -6,11 +6,13 @@ import { setUser } from '../store/actions/authUser';
 import { User } from '../types';
 import { axiosInstance } from '../utils';
 import { Form, Field, FormData } from '../utils/FormUp';
+import { AxiosError } from 'axios';
 
 export const Login: React.FC<RouteComponentProps> = props => {
   const dispatch = useDispatch();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [invalidLoginMsg, setInvalidLoginMsg] = useState('');
 
   const isAuth = useAuth();
 
@@ -23,7 +25,14 @@ export const Login: React.FC<RouteComponentProps> = props => {
         dispatch(setUser(res.data));
         setIsLoggedIn(true);
       })
-      .catch(e => console.error(e));
+      .catch((e: AxiosError) => {
+        if (e.response && e.response.status === 401) {
+          setInvalidLoginMsg('Invalid Credentials');
+          return;
+        }
+
+        setInvalidLoginMsg('Error, please try agian later');
+      });
   };
 
   switch (isAuth) {
@@ -38,7 +47,12 @@ export const Login: React.FC<RouteComponentProps> = props => {
             <Redirect to={from} />
           ) : (
             <div
-              style={{ maxWidth: '30rem', minWidth: '20rem', margin: 'auto' }}
+              style={{
+                maxWidth: '30rem',
+                minWidth: '20rem',
+                margin: 'auto',
+                border: '1px solid black',
+              }}
             >
               <Form onSubmit={handleLogin} submitText="Login">
                 <Field.Input label="username" name="username" required />
@@ -49,6 +63,16 @@ export const Login: React.FC<RouteComponentProps> = props => {
                   type="password"
                 />
               </Form>
+              <div
+                style={{
+                  color: 'rgba(255, 0, 0, 0.8)',
+                  fontStyle: 'oblique',
+                  margin: '1rem 0',
+                  height: '1rem',
+                }}
+              >
+                {invalidLoginMsg}
+              </div>
             </div>
           )}
         </>

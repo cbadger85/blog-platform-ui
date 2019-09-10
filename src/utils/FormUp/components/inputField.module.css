@@ -41,7 +41,7 @@
 }
 
 input.input {
-  width: 100%;
+  width: calc(100% - 0.5rem);
   height: 1.5rem;
   font-family: inherit;
   font-size: 1rem;
@@ -92,17 +92,4 @@ input.input_error:focus {
   font-style: normal;
   font-weight: bold;
   margin-right: 0.2rem;
-}
-
-/* move labels to on top of inputs for sizes < 660px */
-@media (min-width: 660px) {
-  .inputFieldWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .inputErrorMessage {
-    margin: 0.2rem 8.7rem 0;
-  }
 }

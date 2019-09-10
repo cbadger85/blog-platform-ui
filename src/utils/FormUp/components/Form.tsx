@@ -21,6 +21,9 @@ export const Form: React.FC<FormProps> = ({
   cancelText,
   submitButtonAs,
   cancelButtonAs,
+  className = '',
+  id = '',
+  style,
 }) => {
   const [formState, formDispatch] = useReducer(formReducer, undefined as never);
 
@@ -77,11 +80,17 @@ export const Form: React.FC<FormProps> = ({
 
   return (
     <FormContext.Provider value={context}>
-      <form onSubmit={handleOnSubmit}>
+      <form
+        onSubmit={handleOnSubmit}
+        id={id}
+        className={className}
+        style={style}
+      >
         {children}
         <div
-          className={`${styles.formWrapper} ${(onCancel || cancelButtonAs) &&
-            styles.cancel}`}
+          className={`${styles.formWrapper} ${
+            onCancel || cancelButtonAs ? styles.cancel : ''
+          }`}
         >
           {submitButtonAs ? (
             submitButtonAs({
@@ -118,6 +127,9 @@ interface FormBaseProps {
   submitText?: string;
   cancelText?: string;
   submitButtonAs?: React.FC<SubmitButtonProps>;
+  className?: string;
+  id?: string;
+  style?: React.CSSProperties;
 }
 
 interface FormPropsCancelButton extends FormBaseProps {
